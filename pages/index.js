@@ -30,7 +30,13 @@ export async function getStaticProps() {
         //Should have
         props: {
             meetups: Dummy_Meetup
-        }
+        },
+        //Auto generate every seconds if requests recevied
+        //Ideal if data change frequently
+        //This unclocks a feature called- 
+        //incremental static generation
+        //No need to re-deploy or build for data changes
+        revalidate:1
     };  
 }
 export default HomePage;
