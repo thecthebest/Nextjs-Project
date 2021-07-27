@@ -1,4 +1,3 @@
-import loadConfig from "next/dist/next-server/server/config";
 import { Fragment } from "react";
 import MeetupList from "../components/meetups/MeetupList";
 const Dummy_Meetup = [
@@ -25,42 +24,42 @@ function HomePage(props) {
 
 //any code written here will never end up to client side
 //Never executes on client side, including server
-// export async function getStaticProps() {
+export async function getStaticProps() {
 //     //Always need to return an object
-//     return {
-//         //Should have
-//         props: {
-//             meetups: Dummy_Meetup
-//         },
-//         //Auto generate every seconds if requests recevied
-//         //Ideal if data change frequently
-//         //This unclocks a feature called- 
-//         //incremental static generation
-//         //No need to re-deploy or build for data changes
-//         revalidate:1
-//     };  
-// }
+    return {
+        //Should have
+        props: {
+            meetups: Dummy_Meetup
+        },
+        //Auto generate every seconds if requests recevied
+        //Ideal if data change frequently
+        //This unclocks a feature called- 
+        //incremental static generation
+        //No need to re-deploy or build for data changes
+        revalidate:1
+    };  
+}
 
 
 //************************************* */
 //Re-generate page for every incomming request
 //After deployment
-export async function getServerSideProps(contetx) {
-    //run any code here will run on server
-    //Can run any operation that should not 
-    //-be exposed to the users
+// export async function getServerSideProps(contetx) {
+//     //run any code here will run on server
+//     //Can run any operation that should not 
+//     //-be exposed to the users
 
-    //Acess to imcoming request
-    const req = contetx.req;
-    const res = contetx.res;
+//     //Acess to imcoming request
+//     const req = contetx.req;
+//     const res = contetx.res;
 
-    //Always need to return an object
-    return {
-        props: {
-            Dummy_Meetup
-        }
-    };
-}
+//     //Always need to return an object
+//     return {
+//         props: {
+//             Dummy_Meetup
+//         }
+//     };
+// }
 export default HomePage;
 
 // getStaticProps() 
