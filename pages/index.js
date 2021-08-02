@@ -1,9 +1,7 @@
+import { MongoClient } from "mongodb";
 import { Fragment } from "react";
 import MeetupList from "../components/meetups/MeetupList";
-const Dummy_Meetup = [
-    { id: "m1", title: "First Meetup", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Val_Trupchun.jpg/800px-Val_Trupchun.jpg", address: "switzerland", description: "drink" },
-    { id: "m2", title: "First Meetup", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lauterbrunnental_train.jpg/800px-Lauterbrunnental_train.jpg", address: "austria", description: "drink" },
-];
+
 function HomePage(props) {
     return (
         <Fragment>
@@ -25,19 +23,35 @@ function HomePage(props) {
 //any code written here will never end up to client side
 //Never executes on client side, including server
 export async function getStaticProps() {
-//     //Always need to return an object
+    //     //Always need to return an object
+    const client = await MongoClient.connect('');
+    const db = client.db();
+    const meetupsCollection = db.collection('myFirstDatabase');
+    const result = await meetupsCollection.find().toArray();
+    client.close();
+
+    const data = result.map((item) => {
+        return {
+            id: item._id.toString(),
+            title: item.title,
+            address: item.address,
+            description: item.description,
+            image: item.image
+        };
+    });
+    console.log(data);
     return {
         //Should have
         props: {
-            meetups: Dummy_Meetup
+            meetups: data
         },
         //Auto generate every seconds if requests recevied
         //Ideal if data change frequently
         //This unclocks a feature called- 
         //incremental static generation
         //No need to re-deploy or build for data changes
-        revalidate:1
-    };  
+        revalidate: 1
+    };
 }
 
 
