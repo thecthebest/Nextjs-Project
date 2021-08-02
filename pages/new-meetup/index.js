@@ -4,6 +4,7 @@ import { useRouter } from "next/dist/client/router";
 import NewMeetupForm from "../../components/meetups/NewMeetupForm";
 
 function NewMeetup() {
+    const router = useRouter();
     const addMeetupHandler = async (eneteredMeetupData) => {
         console.log(eneteredMeetupData);
         //For local request to the server
@@ -18,6 +19,7 @@ function NewMeetup() {
         );
         const data = await response.json();
         console.log(data);
+        router.replace('/');
     };
     return (
         <NewMeetupForm onAddMeetup={addMeetupHandler} />
