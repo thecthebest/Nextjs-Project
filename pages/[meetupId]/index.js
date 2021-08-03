@@ -15,24 +15,19 @@ function MeetupDetails(props) {
 //This should be exported if a page is dynamic
 //getStaticProps is utilized
 export async function getStaticPaths() {
+    const client = await MongoClient.connect('');
+    const db = client.db();
+    const meetupsCollection = db.collection('myFirstDatabase');
+    const result = await meetupsCollection.find({}, {_id: 1}).toArray();
+    client.close();
     return {
         //tells whetere your paths array contains all the supported parameters values or just some
         //False:Contains all meetupId values and when something else is requested 404 is given
         //True:Doesn't contain all meetupId values & will be generated when requested
         fallback: false,
-        paths: [
-            //one object per verion of the [meetupId] page
-            {
-                params: {
-                    meetupId: "m1"
-                },
-            },
-            {
-                params: {
-                    meetupId: "m2"
-                },
-            },
-        ]
+        paths: result.map((item) => {
+            return {params: {meetupId: item._id.toString()}}
+        })
     };
 }
 export async function getStaticProps(contetx) {
