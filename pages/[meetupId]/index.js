@@ -1,7 +1,7 @@
 // our-domain.com/new-meetup
 
+import { MongoClient } from "mongodb";
 import MeetupDetail from "../../components/meetups/MeetupDetail";
-
 function MeetupDetails() {
     return (
         <MeetupDetail
@@ -37,16 +37,16 @@ export async function getStaticPaths() {
 }
 export async function getStaticProps(contetx) {
     const meetupId = contetx.params.meetupId;
+    const client = await MongoClient.connect('');
+    const db = client.db();
+    const meetupsCollection = db.collection('myFirstDatabase');
+    const result = await meetupsCollection.findOne({_id: ObjectId(meetupId)});
+    client.close();
+    console.log(meetupId, result);
 
     return {
         props: {
-            meetupData: {
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Val_Trupchun.jpg/800px-Val_Trupchun.jpg",
-                id: meetupId,
-                title: "Starting point",
-                address: "Lucern, Swiss Alps",
-                description: "Amazing view"
-            }
+            meetupData: result
         }
     };
 }
