@@ -1,21 +1,21 @@
 // our-domain.com/new-meetup
 
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import MeetupDetail from "../../components/meetups/MeetupDetail";
 function MeetupDetails(props) {
     return (
         <MeetupDetail
-            image="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Val_Trupchun.jpg/800px-Val_Trupchun.jpg"
-            title="swiss Apls"
-            address="lucerne, Swiss"
-            description="This is first stop"
+        image={props.meetupData.image}
+        title={props.meetupData.title}
+        address={props.meetupData.address}
+        description={props.meetupData.description}
         />
     );
 }
 //This should be exported if a page is dynamic
 //getStaticProps is utilized
 export async function getStaticPaths() {
-    const client = await MongoClient.connect('');
+    const client = await MongoClient.connect('mongodb+srv://udemy:JL2FJle9EvBd4pb3@cluster0.6lza5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
     const db = client.db();
     const meetupsCollection = db.collection('myFirstDatabase');
     const result = await meetupsCollection.find({}, {_id: 1}).toArray();
@@ -32,7 +32,7 @@ export async function getStaticPaths() {
 }
 export async function getStaticProps(contetx) {
     const meetupId = contetx.params.meetupId;
-    const client = await MongoClient.connect('');
+    const client = await MongoClient.connect('mongodb+srv://udemy:JL2FJle9EvBd4pb3@cluster0.6lza5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
     const db = client.db();
     const meetupsCollection = db.collection('myFirstDatabase');
     const result = await meetupsCollection.findOne({_id: ObjectId(meetupId)});
@@ -41,7 +41,13 @@ export async function getStaticProps(contetx) {
 
     return {
         props: {
-            meetupData: result
+            meetupData: {
+                id: result._id.toString(),
+                title: result.title,
+                address: result.address,
+                image: result.image,
+                description: result.description
+            }
         }
     };
 }
