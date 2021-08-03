@@ -2,7 +2,7 @@
 
 import { MongoClient } from "mongodb";
 import MeetupDetail from "../../components/meetups/MeetupDetail";
-function MeetupDetails() {
+function MeetupDetails(props) {
     return (
         <MeetupDetail
             image="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Val_Trupchun.jpg/800px-Val_Trupchun.jpg"
