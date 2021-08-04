@@ -1,24 +1,31 @@
 // our-domain.com/new-meetup
-
+import Head from "next/head";
 import { MongoClient, ObjectId } from "mongodb";
 import MeetupDetail from "../../components/meetups/MeetupDetail";
+import { Fragment } from "react";
 function MeetupDetails(props) {
     return (
-        <MeetupDetail
-        image={props.meetupData.image}
-        title={props.meetupData.title}
-        address={props.meetupData.address}
-        description={props.meetupData.description}
-        />
+        <Fragment>
+            <Head>
+                <title>{props.meetupData.title}</title>
+                <meta name="description" content={props.meetupData.description} />
+            </Head>
+            <MeetupDetail
+                image={props.meetupData.image}
+                title={props.meetupData.title}
+                address={props.meetupData.address}
+                description={props.meetupData.description}
+            />
+        </Fragment>
     );
 }
 //This should be exported if a page is dynamic
 //getStaticProps is utilized
 export async function getStaticPaths() {
-    const client = await MongoClient.connect('mongodb+srv://udemy:JL2FJle9EvBd4pb3@cluster0.6lza5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+    const client = await MongoClient.connect('');
     const db = client.db();
     const meetupsCollection = db.collection('myFirstDatabase');
-    const result = await meetupsCollection.find({}, {_id: 1}).toArray();
+    const result = await meetupsCollection.find({}, { _id: 1 }).toArray();
     client.close();
     return {
         //tells whetere your paths array contains all the supported parameters values or just some
@@ -26,16 +33,16 @@ export async function getStaticPaths() {
         //True:Doesn't contain all meetupId values & will be generated when requested
         fallback: false,
         paths: result.map((item) => {
-            return {params: {meetupId: item._id.toString()}}
+            return { params: { meetupId: item._id.toString() } }
         })
     };
 }
 export async function getStaticProps(contetx) {
     const meetupId = contetx.params.meetupId;
-    const client = await MongoClient.connect('mongodb+srv://udemy:JL2FJle9EvBd4pb3@cluster0.6lza5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+    const client = await MongoClient.connect('');
     const db = client.db();
     const meetupsCollection = db.collection('myFirstDatabase');
-    const result = await meetupsCollection.findOne({_id: ObjectId(meetupId)});
+    const result = await meetupsCollection.findOne({ _id: ObjectId(meetupId) });
     client.close();
     console.log(meetupId, result);
 
